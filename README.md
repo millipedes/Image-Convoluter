@@ -12,12 +12,12 @@ make it more blurry.
   - Gaussian
   - Uniform
 
-
 The Gaussian kernel can be expressed as:
-\[ G(j, i) = \frac{1}{{2\pi\sigma^2}} e^{-\frac{{j^2 + i^2}}{{2\sigma^2}}} \]
-where the domain of i and j are [-R, R] for some radius R of the kernel and some
-standard deviation \[ \sigma \].
 
-The Uniform kernel can be expressed as:
-\[ \frac{1}{k} \]
+![Gaussian Kernel](figures/gaussian_kernel_2d.png)
+
+where the domain of i and j are [-R, R] for some radius R of the kernel and some
+standard deviation sigma.
+
+The Uniform kernel can be expressed as: 1/k for all i and j in domain [-R, R]
 for some uniform constant k.
