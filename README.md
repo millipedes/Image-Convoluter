@@ -21,3 +21,38 @@ standard deviation sigma.
 
 The Uniform kernel can be expressed as: 1/k for all i and j in domain [-R, R]
 for some uniform constant k.
+
+## :mag_right: Examples
+### Gaussian Applied to png
+The following is an image generated with the [Erdos Renyi random graph
+generator](https://github.com/millipedes/Erdos-Renyi-Visualization) with some
+particular parameters written by millipedes.
+
+![Erdos Renyi Random Graph](figures/test_in.png)
+
+The following convolution parameters were applied:
+  - 15 convolutions
+  - Gaussian Kernel
+  - 3 Radius Kernel (i.e. 7x7)
+  - Sigma = 0.84089642
+  - png file format
+
+this is the resulting image:
+![Erdos Renyi Random Graph Convoluted](figures/test_out.png)
+
+### Gaussian Applied to netpbm
+The following is an image generated with the [C Graphing
+tool](https://github.com/millipedes/C-Netpbm-Function-Grapher)
+written by millipedes.
+
+![Graph](figures/test_in.ppm)
+
+The following convolution parameters were applied:
+  - 15 convolutions
+  - Gaussian Kernel
+  - 3 Radius Kernel (i.e. 7x7)
+  - Sigma = 0.84089642
+  - ppm (subset of netpbm) file format
+
+this is the resulting image:
+![Graph Convoluted](figures/test_out.ppm)
