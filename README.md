@@ -41,11 +41,12 @@ this is the resulting image:
 ![Erdos Renyi Random Graph Convoluted](figures/test_out.png)
 
 ### Gaussian Applied to netpbm
-The following is an image generated with the [C Graphing
+The `figures/test_in.ppm` is an image generated with the [C Graphing
 tool](https://github.com/millipedes/C-Netpbm-Function-Grapher)
 written by millipedes.
 
-![Graph](figures/test_in.ppm)
+Unfortunately git does not have a .ppm displayer but you can find that file in
+this repo.
 
 The following convolution parameters were applied:
   - 15 convolutions
@@ -54,5 +55,4 @@ The following convolution parameters were applied:
   - Sigma = 0.84089642
   - ppm (subset of netpbm) file format
 
-this is the resulting image:
-![Graph Convoluted](figures/test_out.ppm)
+this is the resulting image: `figures/test_out.ppm`.
