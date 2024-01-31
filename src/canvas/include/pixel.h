@@ -2,7 +2,7 @@
  * @file   pixel.h
  * @brief  This file contains the function definitions for pixel.c.
  * @author Matthew C. Lindeman
- * @date   January 30, 2023
+ * @date   January 30, 2024
  * @bug    None known
  * @todo   Nothing
  */

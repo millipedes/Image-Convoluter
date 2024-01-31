@@ -2,7 +2,7 @@
  * @file   pixel.c
  * @brief  This file contains the functions related to the pixel data structure.
  * @author Matthew C. Lindeman
- * @date   January 30, 2023
+ * @date   January 30, 2024
  * @bug    None known
  * @todo   Nothing
  */

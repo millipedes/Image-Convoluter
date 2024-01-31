@@ -1,3 +1,12 @@
+/**
+ * @file   convolution.c
+ * @breif  This file contains the functions which will produce convolution
+ * matrices used to convolute images.
+ * @author Matthew C. Lindeman
+ * @date   January 30, 2024
+ * @bug    Nothing atm.
+ * @todo   None known.
+ */
 #include "include/convolution.h"
 
 canvas convolute_canvas(canvas canvas_old, canvas canvas_new,

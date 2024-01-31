@@ -3,7 +3,7 @@
  * @brief  This file contains the functions related to the canvas data
  * structure.
  * @author Matthew C. Lindeman
- * @date   January 30, 2023
+ * @date   January 30, 2024
  * @bug    None known
  * @todo   Nothing
  */
@@ -58,28 +58,46 @@ void write_canvas_ppm(canvas the_canvas, const char * file_name) {
   fclose(fp);
 }
 
+/**
+ * This function reads a netpbm file into a canvas.  It fully expects the P3
+ * format with colors in the domain [0-255], will error otherwise.
+ * @param   file_name - The name of the netpbm file.
+ * @return the_canvas - The canvas the file was written to.
+ */
 canvas read_canvas_ppm(const char * file_name) {
   FILE * fp = fopen(file_name, "r");
   char buf[1024] = {0};
 
   // P3 header
-  fgets(buf, 1024, fp);
+  if(!fgets(buf, 1024, fp)) {
+    fprintf(stderr, "[READ_CANVAS_PPM]: fgets error\nExiting\n");
+    exit(1);
+  }
 
   // width height
-  fgets(buf, 1024, fp);
+  if(!fgets(buf, 1024, fp)) {
+    fprintf(stderr, "[READ_CANVAS_PPM]: fgets error\nExiting\n");
+    exit(1);
+  }
   int width = 0;
   int height = 0;
   sscanf(buf, "%d %d", &width, &height);
 
   // Color Scale header
-  fgets(buf, 1024, fp);
+  if(!fgets(buf, 1024, fp)) {
+    fprintf(stderr, "[READ_CANVAS_PPM]: fgets error\nExiting\n");
+    exit(1);
+  }
 
   // Set up canvas
   canvas the_canvas = init_canvas(height, width, MAX_COL, MAX_COL, MAX_COL);
 
   for(int i = 0; i < height; i++) {
     for(int j = 0; j < width; j++) {
-      fgets(buf, 1024, fp);
+      if(!fgets(buf, 1024, fp)) { 
+        fprintf(stderr, "[READ_CANVAS_PPM]: fgets error\nExiting\n");
+        exit(1);
+      }
       sscanf(buf, "%hhu %hhu %hhu", &the_canvas.values[i][j].r,
           &the_canvas.values[i][j].g, &the_canvas.values[i][j].b);
     }
@@ -90,6 +108,12 @@ canvas read_canvas_ppm(const char * file_name) {
   return the_canvas;
 }
 
+/**
+  * This function writes a canvas to a png file.
+  * @param the_canvas - The canvas to be written to the png file.
+  * @param  file_name - The name of the file which it will write to.
+  * @return       N/a
+  */
 void write_canvas_png(canvas the_canvas, const char * file_name) {
   FILE * fp = fopen(file_name, "w");
   png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
@@ -117,55 +141,64 @@ void write_canvas_png(canvas the_canvas, const char * file_name) {
   fclose(fp);
 }
 
+/**
+ * This function reads a png file into a canvas.
+ * @param   file_name - The name of the netpbm file.
+ * @return the_canvas - The canvas the file was written to.
+ */
 canvas read_canvas_png(const char *file_name) {
-    FILE *fp = fopen(file_name, "r");
+  FILE *fp = fopen(file_name, "r");
 
-    png_byte header[8];
-    fread(header, 1, 8, fp);
-    png_sig_cmp(header, 0, 8);
+  png_byte header[8];
+  if(!fread(header, 1, 8, fp)) {
+    fprintf(stderr, "[READ_CANVAS_PNG]: fread error\nExiting\n");
+    exit(1);
+  }
+  png_sig_cmp(header, 0, 8);
 
-    png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    png_infop info_ptr = png_create_info_struct(png_ptr);
+  png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  png_infop info_ptr = png_create_info_struct(png_ptr);
 
-    png_init_io(png_ptr, fp);
-    png_set_sig_bytes(png_ptr, 8);
+  png_init_io(png_ptr, fp);
+  png_set_sig_bytes(png_ptr, 8);
 
-    png_read_info(png_ptr, info_ptr);
+  png_read_info(png_ptr, info_ptr);
 
-    canvas the_canvas = init_canvas(png_get_image_height(png_ptr, info_ptr),
-        png_get_image_width(png_ptr, info_ptr), MAX_COL, MAX_COL, MAX_COL);
+  canvas the_canvas = init_canvas(png_get_image_height(png_ptr, info_ptr),
+      png_get_image_width(png_ptr, info_ptr), MAX_COL, MAX_COL, MAX_COL);
 
-    png_byte color_type = png_get_color_type(png_ptr, info_ptr);
-    png_byte bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+  png_byte color_type = png_get_color_type(png_ptr, info_ptr);
+  png_byte bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 
-    if (bit_depth == 16)
-        png_set_strip_16(png_ptr);
-    if (color_type == PNG_COLOR_TYPE_PALETTE)
-        png_set_palette_to_rgb(png_ptr);
-    if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
-        png_set_expand_gray_1_2_4_to_8(png_ptr);
-    if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
-        png_set_tRNS_to_alpha(png_ptr);
+  if(bit_depth == 16)
+    png_set_strip_16(png_ptr);
+  if(color_type == PNG_COLOR_TYPE_PALETTE)
+    png_set_palette_to_rgb(png_ptr);
+  if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+    png_set_expand_gray_1_2_4_to_8(png_ptr);
+  if(png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+    png_set_tRNS_to_alpha(png_ptr);
 
-    png_read_update_info(png_ptr, info_ptr);
+  png_read_update_info(png_ptr, info_ptr);
 
-    for (int i = 0; i < the_canvas.height; i++) {
-        png_bytep row = (png_bytep)malloc(png_get_rowbytes(png_ptr, info_ptr));
-        png_read_row(png_ptr, row, NULL);
+  for (int i = 0; i < the_canvas.height; i++) {
+    png_bytep row = (png_bytep)malloc(png_get_rowbytes(png_ptr, info_ptr));
+    png_read_row(png_ptr, row, NULL);
 
-        for (int j = 0; j < the_canvas.width; j++) {
-            the_canvas.values[i][j].r = (int)row[3 * j];
-            the_canvas.values[i][j].g = (int)row[3 * j + 1];
-            the_canvas.values[i][j].b = (int)row[3 * j + 2];
-        }
-
-        free(row);
+    for (int j = 0; j < the_canvas.width; j++) {
+      the_canvas.values[i][j].r = (int)row[3 * j];
+      the_canvas.values[i][j].g = (int)row[3 * j + 1];
+      the_canvas.values[i][j].b = (int)row[3 * j + 2];
     }
 
-    fclose(fp);
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-    return the_canvas;
+    free(row);
+  }
+
+  fclose(fp);
+  png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+  return the_canvas;
 }
+
 /**
  * This function frees a canvas.
  * @param the_canvas - The canvas to be freed.

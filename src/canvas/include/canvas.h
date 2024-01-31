@@ -2,7 +2,7 @@
  * @file   canvas.h
  * @brief  This file contains the function definitions for canvas.c.
  * @author Matthew C. Lindeman
- * @date   January 30, 2023
+ * @date   January 30, 2024
  * @bug    None known
  * @todo   Nothing
  */

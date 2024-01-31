@@ -1,3 +1,11 @@
+/**
+ * @file   convolution.h
+ * @breif  This file contains the function definitions for convolution.c.
+ * @author Matthew C. Lindeman
+ * @date   January 30, 2024
+ * @bug    Nothing atm.
+ * @todo   None known.
+ */
 #ifndef CONVOLUTION_H
 #define CONVOLUTION_H
 
